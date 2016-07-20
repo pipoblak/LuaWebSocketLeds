@@ -5,9 +5,12 @@ red = 0 ;
 green = 0;
 blue = 0;
 tamanhoFita=0;
-i = 0;
+i = 1;
+ida=true;
 wifi.sta.connect()
 print(wifi.sta.getip())
+
+
 
 function startVariables(r,g,b,pixels)
     red=r;
@@ -21,19 +24,95 @@ function set_RGBs(r,g,b,pixels)
     ws2812.write(string.char(r,g,b):rep(pixels));
 end
 
-
-
 function doSideBySide()
-    b = ws2812.newBuffer(8,3);
+    buff = ws2812.newBuffer(tamanhoFita,3);
     i=i+1
-    b:fade(2)
-    b:set(i%b:size()+1, red, green,blue)
-    b:write()
+    buff:fade(2)
+    buff:set(i%b:size()+1, red, green,blue)
+    buff:write()
 end
 
-function startSideBySide(time)
-    tmr.unregister(0);
-    tmr.alarm(0, time, 1, doSideBySide);
+function doARun()
+   buff = ws2812.newBuffer(tamanhoFita,3);
+    if ida==true then
+        
+        if i==1 then
+            ws2812.write(string.char(0,0,0):rep(tamanhoFita));
+            buff:fill(0,0,0)
+    
+        end
+        
+        if i>=1 and i<=tamanhoFita then
+        buff:write(buff:set(i,red,green,blue));
+        end
+       
+        
+    
+        if i~=1 then
+        
+            buff:write(buff:set(i-1,0,0,0));
+    
+        end
+    
+        if i==tamanhoFita then
+            tmr.delay(500000)
+            ws2812.write(string.char(0,0,0):rep(tamanhoFita));
+            buff:fill(0,0,0)
+        end
+        
+            
+        buff:write(buff:set(i,0,0,0));
+    
+        
+    
+        if i==tamanhoFita then
+            
+        ida=false;
+            i=i-1;
+        else 
+            i=i+1;
+        end
+        
+         
+    else
+       
+        
+        buff:write(buff:set(i,red,green,blue));
+        
+        if i~=1 then
+        buff:write(buff:set(i+1,0,0,0));
+        end
+        
+ 
+        buff:write(buff:set(i,0,0,0));
+        
+        i=i-1;
+         if i==0 then
+            buff:fill(0,0,0)
+            ida=true;
+            i=i+1;
+        end
+    end
+    
+       
+end
+
+function doAEffect(time,id)
+     i=0;
+     if id == 0 then
+        tmr.alarm(1, time, 1, doSideBySide);
+    elseif id == 1 then
+        tmr.alarm(1, time, 1, doARun);
+    elseif id == 2 then
+        tmr.alarm(1, time, 1, doSideBySide);
+    elseif id == 3 then
+        tmr.alarm(1, time, 1, doSideBySide);
+    elseif id == 4 then
+        tmr.alarm(1, time, 1, doSideBySide);
+            
+    end
+    
+    
 end
 
 
