@@ -103,10 +103,14 @@ function doARun()
 end
 
 function doAEffect(time,id)
-     i=0;
-     if id == 0 then
+    
+    i=1;
+    firstTime=true;
+    tmr.unregister(1);
+    if id == 0 then
         tmr.alarm(1, time, 1, doSideBySide);
     elseif id == 1 then
+        ida=true;
         tmr.alarm(1, time, 1, doARun);
     elseif id == 2 then
         tmr.alarm(1, time, 1, doSideBySide);
