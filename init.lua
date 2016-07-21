@@ -7,6 +7,7 @@ blue = 0;
 tamanhoFita=0;
 i = 1;
 ida=true;
+firstTime=true;
 wifi.sta.connect()
 print(wifi.sta.getip())
 
@@ -33,14 +34,20 @@ function doSideBySide()
 end
 
 function doARun()
-   buff = ws2812.newBuffer(tamanhoFita,3);
+    if firstTime==true then
+            buff = ws2812.newBuffer(tamanhoFita,3);
+            ws2812.write(string.char(0,0,0):rep(tamanhoFita));
+            buff:write(buff:fill(0,0,0));
+            firstTime=false;
+    end
+     
     if ida==true then
         
         if i==1 then
-            ws2812.write(string.char(0,0,0):rep(tamanhoFita));
-            buff:fill(0,0,0)
-    
+      
         end
+        
+       
         
         if i>=1 and i<=tamanhoFita then
         buff:write(buff:set(i,red,green,blue));
@@ -56,8 +63,7 @@ function doARun()
     
         if i==tamanhoFita then
             tmr.delay(500000)
-            ws2812.write(string.char(0,0,0):rep(tamanhoFita));
-            buff:fill(0,0,0)
+                     
         end
         
             
@@ -88,7 +94,6 @@ function doARun()
         
         i=i-1;
          if i==0 then
-            buff:fill(0,0,0)
             ida=true;
             i=i+1;
         end
